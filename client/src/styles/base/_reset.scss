@@ -1,0 +1,87 @@
+// Abstracts
+@use '../abstracts/' as *;
+
+/* ====== */
+/* Resets */
+/* ====== */
+
+html {
+    box-sizing: border-box;
+    
+    /* To make rem units easier to work with (1rem = 10px) */
+    font-size: 62.5%;
+    /* Scrollbar Styling : Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: ss-var($colors, "neutral", "black") ss-var($colors, "neutral", "white");
+    /* Scrollbar Styling for Webkit browsers */
+    &::-webkit-scrollbar {
+        width: 1.5rem;
+    }
+    &::-webkit-scrollbar-track {
+        background: ss-var($colors, "neutral", "black");
+    }
+    &::-webkit-scrollbar-thumb {
+        background: ss-var($colors, "neutral", "gray");
+        border-radius: 3px;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+        background: ss-var($colors, "neutral", "white");
+    }
+}
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-sizing: inherit;
+    -webkit-tap-highlight-color: transparent;
+    font-size: 1.6rem;
+    /* Font family */
+    font-family: $font-name, $font-serif;
+}
+
+/* Uncomment if custom outline is planned for each element needed */
+/* :focus {
+     outline: none;
+}*/
+
+/* Links decoration */
+a {
+    text-decoration: none;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+/* Remove default list styling */
+ul,
+ol {
+    list-style: none;
+}
+
+body {
+    min-height: 100vh;
+    // text-rendering: optimizeSpeed;
+    // line-height: 1.5;
+}
+
+img,
+picture {
+    max-width: 100%;
+    display: block;
+}
+
+label,
+input,
+button,
+textarea,
+select {
+    font: inherit;
+    outline: none;
+}
+
+button {
+    cursor: pointer;
+}

@@ -1,0 +1,50 @@
+.d-flex {
+    display: flex;
+}
+
+.flex-column {
+    flex-direction: column;
+}
+
+.justify-content-between {
+    justify-content: space-between;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
+.g-1 {
+    gap: 0.4rem
+}
+
+.g-2 {
+    gap: 0.8rem
+}
+
+
+.row {
+    display: flex;
+}
+
+// < tablet
+@media (max-width: 768px) {
+    .hide-on-mobile {
+        display: none;
+    }
+
+    .show-on-mobile {
+        display: block;
+    }
+}
+
+// >= tablet creen
+@media (min-width: 768px) {
+    .col-md-3 {
+        flex: 0 0 25%;
+    }
+
+    .col-md-9 {
+        flex: 0 0 75%;
+    }
+}

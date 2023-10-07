@@ -1,0 +1,37 @@
+// Abstracts
+@use '../abstracts/' as *;
+
+.btn {
+    display: flex;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    line-height: 1.5;
+    font-weight: 500;
+    padding: 0.6rem 1.2rem;
+    border-radius: 0.5rem;
+    background-color: ss-var($colors, "neutral", "lightgray");
+
+    &-primary {
+        color: ss-var($colors, "neutral", "white");
+        background-color: ss-var($colors, "primary", "green");
+    }
+
+    &-warning {
+        color: ss-var($colors, "neutral", "white");
+        background-color: ss-var($colors, "secondary", "yellow");
+    }
+
+    &-danger {
+        color: ss-var($colors, "neutral", "white");
+        background-color: ss-var($colors, "secondary", "red");
+    }
+
+    &:hover {
+        opacity: 0.8;
+    }
+
+    &[disabled] {
+        opacity: 0.7;
+    }
+}
