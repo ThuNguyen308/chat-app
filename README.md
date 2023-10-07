@@ -1,12 +1,9 @@
 # Chat app real-time
 ## 1. Function
 <ul>
-    <li>CRUD product</li>
-    <li>Authentication (walk-in guest/ user/ admin)</li>
     <li>Register login</li>
-    <li>Sort/search/paginate products</li>
-    <li>Order</li>
-    <li>Payment</li>
+    <li>Chat one-one, chat group in real-time</li>
+    <li>Group chat: Admin can add/remove member or delete group. Member can leave group</li>
 </ul>
 
 ## 2. Tecnology used
