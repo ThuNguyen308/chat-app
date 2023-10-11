@@ -148,7 +148,7 @@ export default function RegisterForm() {
       </div>
 
       <div className="form-group">
-        <label htmlFor="image">Email</label>
+        <label htmlFor="image">Avatar</label>
         <input
           type="file"
           accept="image/*"

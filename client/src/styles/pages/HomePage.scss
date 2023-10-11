@@ -6,6 +6,24 @@
         max-width: 57.6rem;
         padding: 4rem 1.6rem;
         margin: auto;
+
+        .logo {
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+
+        img {
+            width: 100px;
+        }
+
+        h1 {
+            margin: 0;
+            background: -webkit-linear-gradient(left, #1875bb, #fdbc16);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    }
     }
 }
 

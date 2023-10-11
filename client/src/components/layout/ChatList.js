@@ -4,15 +4,13 @@ import { ChatState } from "../../context/ChatProvider";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { getSender, getSenderName } from "../../helper/ChatLogics";
+import groupAvatar from "../../assets/images/groupAvatar.png";
 
 export default function ChatList({ fetchChatsAgain }) {
-  const { chats, setChats, selectedChat, setSelectedChat } = ChatState();
+  const { user, chats, setChats, selectedChat, setSelectedChat } = ChatState();
 
   const [isOpenCreateGroupChatModal, setIsOpenCreateGroupChatModal] =
     useState(false);
-
-  const user = localStorage.getItem("userInfo");
-  console.log(user);
 
   useEffect(() => {
     const fetchChats = async () => {
@@ -45,7 +43,10 @@ export default function ChatList({ fetchChatsAgain }) {
 
   return (
     <div className="col-md-3 chat-list-container">
-      <div className="d-flex align-items-center justify-content-between g-2">
+      <div
+        className="d-flex align-items-center justify-content-between g-2"
+        style={{ padding: "8px" }}
+      >
         <h2 style={{ whiteSpace: "nowrap" }}>My chats</h2>
         <button
           className="btn d-flex align-items-center g-1"
@@ -65,9 +66,13 @@ export default function ChatList({ fetchChatsAgain }) {
             onClick={() => setSelectedChat(chat)}
           >
             <div className="avatar">
-              {!chat.isGroupChat && (
-                <img src={getSender(user, chat.users).pic} />
-              )}
+              <img
+                src={
+                  chat.isGroupChat
+                    ? groupAvatar
+                    : getSender(user, chat.users).pic
+                }
+              />
             </div>
             <div className="details">
               <h3>

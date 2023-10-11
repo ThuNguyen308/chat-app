@@ -11,10 +11,11 @@ import UpdateGroupChatModal from "../modal/UpdateGroupChatModal";
 import ProfileGroupModal from "../modal/ProfileGroupModal";
 import ChatContent from "../ChatContent";
 import animationData from "../../assets/animations/typing.json";
+import groupAvatar from "../../assets/images/groupAvatar.png";
 
 var socket, selectedChatCompare;
 export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
-  const { user, selectedChat } = ChatState();
+  const { user, selectedChat, notifications, setNotifications } = ChatState();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState();
@@ -38,18 +39,24 @@ export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
       setSocketConnected(true);
     });
     socket.on("message recieved", (newMessageRecieved) => {
-      console.log("co nguoi gui tin ne", newMessageRecieved);
-      if (
-        !selectedChatCompare ||
-        selectedChatCompare._id !== newMessageRecieved.chat._id
-      ) {
-        //give noti
+      // console.log("message recived", selectedChatCompare, newMessageRecieved);
+      //if current chat !== chat of message recieved
+      if (selectedChatCompare?._id !== newMessageRecieved.chat._id) {
+        //if not exist info chat in notis
+        if (
+          !notifications
+            .map((noti) => noti.chat._id)
+            .includes(newMessageRecieved.chat._id)
+        ) {
+          setNotifications([newMessageRecieved, ...notifications]);
+        }
+        setFetchChatsAgain(!fetchChatsAgain);
       } else {
         setMessages([...messages, newMessageRecieved]);
         setFetchChatsAgain(!fetchChatsAgain);
       }
     });
-  }, []);
+  });
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -81,17 +88,17 @@ export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
     selectedChatCompare = selectedChat;
   }, [selectedChat]);
 
-  useEffect(() => {
-    setTyping(false);
-    if (selectedChat) {
-      socket.on("typing", (room) => {
-        if (room === selectedChat._id) setTyping(true);
-      });
-      socket.on("stop typing", (room) => {
-        if (room === selectedChat._id) setTyping(false);
-      });
-    }
-  }, [selectedChat]);
+  // useEffect(() => {
+  //   setTyping(false);
+  //   if (selectedChat) {
+  //     socket.on("typing", (room) => {
+  //       if (room === selectedChat._id) setTyping(true);
+  //     });
+  //     socket.on("stop typing", (room) => {
+  //       if (room === selectedChat._id) setTyping(false);
+  //     });
+  //   }
+  // }, [selectedChat]);
 
   const handleKeydown = (e) => {
     if (e.key === "Enter" && message) {
@@ -143,38 +150,50 @@ export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
         <>
           {/* Header */}
           <div className="header">
-            {selectedChat.isGroupChat ? (
-              <>
-                <span className="name">{selectedChat.chatName}</span>
-                {isOpenModal ? (
-                  user._id === selectedChat.groupAdmin._id ? (
-                    <UpdateGroupChatModal
-                      fetchChatsAgain={fetchChatsAgain}
-                      setFetchChatsAgain={setFetchChatsAgain}
+            <div className="header-left">
+              <div className="avatar">
+                <img
+                  src={
+                    selectedChat.isGroupChat
+                      ? groupAvatar
+                      : getSender(user, selectedChat.users).pic
+                  }
+                />
+                <i className="fa-solid fa-users"></i>
+              </div>
+              {selectedChat.isGroupChat ? (
+                <>
+                  <span className="name">{selectedChat.chatName}</span>
+                  {isOpenModal ? (
+                    user._id === selectedChat.groupAdmin._id ? (
+                      <UpdateGroupChatModal
+                        fetchChatsAgain={fetchChatsAgain}
+                        setFetchChatsAgain={setFetchChatsAgain}
+                        onClose={() => setIsOpenModal(false)}
+                      />
+                    ) : (
+                      <ProfileGroupModal
+                        fetchChatsAgain={fetchChatsAgain}
+                        setFetchChatsAgain={setFetchChatsAgain}
+                        onClose={() => setIsOpenModal(false)}
+                      />
+                    )
+                  ) : null}
+                </>
+              ) : (
+                <>
+                  <span className="name">
+                    {getSenderName(user, selectedChat.users)}
+                  </span>
+                  {isOpenModal ? (
+                    <UserModal
+                      user={getSender(user, selectedChat.users)}
                       onClose={() => setIsOpenModal(false)}
                     />
-                  ) : (
-                    <ProfileGroupModal
-                      fetchChatsAgain={fetchChatsAgain}
-                      setFetchChatsAgain={setFetchChatsAgain}
-                      onClose={() => setIsOpenModal(false)}
-                    />
-                  )
-                ) : null}
-              </>
-            ) : (
-              <>
-                <span className="name">
-                  {getSenderName(user, selectedChat.users)}
-                </span>
-                {isOpenModal ? (
-                  <UserModal
-                    user={getSender(user, selectedChat.users)}
-                    onClose={() => setIsOpenModal(false)}
-                  />
-                ) : null}
-              </>
-            )}
+                  ) : null}
+                </>
+              )}
+            </div>
 
             <button className="btn" onClick={() => setIsOpenModal(true)}>
               <i className="fa-solid fa-eye"></i>
@@ -182,7 +201,7 @@ export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
           </div>
 
           {/* Content */}
-          <div className="content">
+          <div className="chat-box-wrapper">
             <ChatContent messages={messages} />
             {typing ? (
               <div>
@@ -199,7 +218,7 @@ export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
           </div>
 
           {/* Message input */}
-          <div className="input-group">
+          <div className="input-group" style={{ margin: "8px" }}>
             <input
               type="text"
               placeholder="Enter Message"

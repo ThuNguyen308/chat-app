@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import UserListItem from "../UserItem/UserListItem";
 import toast from "react-hot-toast";
 import UserBadgeItem from "../UserItem/UserBadgeItem";
@@ -7,6 +7,7 @@ import { ChatState } from "../../context/ChatProvider";
 
 export default function GroupChatModal({ onClose }) {
   const [groupChatName, setGroupChatName] = useState("");
+  const [keyword, setKeyword] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const { chats, setChats } = ChatState();
@@ -33,6 +34,15 @@ export default function GroupChatModal({ onClose }) {
     }
     // setLoading(false);
   };
+
+  //debound search
+  useEffect(() => {
+    const timeOutId = setTimeout(() => {
+      handleSearch(keyword);
+    }, 1000);
+
+    return () => clearTimeout(timeOutId);
+  }, [keyword]);
 
   const handleAddUser = (userToAdd) => {
     if (selectedUsers.map((user) => user._id).includes(userToAdd._id)) {
@@ -97,7 +107,7 @@ export default function GroupChatModal({ onClose }) {
             />
             <input
               placeholder="Add user"
-              onChange={(e) => handleSearch(e.target.value)}
+              onChange={(e) => setKeyword(e.target.value)}
             />
 
             <div className="badge-list">

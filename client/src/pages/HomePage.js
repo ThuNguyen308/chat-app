@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "../styles/pages/HomePage.scss";
 import LoginForm from "../components/forms/LoginForm";
 import RegisterForm from "../components/forms/RegisterForm";
+import logo from "../assets/images/logo.png";
 
 export default function HomePage() {
   const [tabIndex, setTabIndex] = useState(0); //{0: login, 1: sign up}
@@ -22,6 +23,10 @@ export default function HomePage() {
           >
             Sign up
           </button>
+        </div>
+        <div className="logo">
+          <img src={logo} />
+          <h1>Let's Talk</h1>
         </div>
         <div className="tab-content">
           {tabIndex === 0 ? <LoginForm /> : <RegisterForm />}
