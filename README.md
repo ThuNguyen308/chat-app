@@ -11,4 +11,5 @@
     <li>Frontend: Scss, useContext, ReactJs</li>
     <li>Backend: ExpressJs</li>   
     <li>Real-time: Socket.io</li>   
+    <li>Cloud-based service: Cloudinary for uploading images</li>   
 </ul>
