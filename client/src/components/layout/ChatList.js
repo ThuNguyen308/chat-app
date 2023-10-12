@@ -42,7 +42,11 @@ export default function ChatList({ fetchChatsAgain }) {
   }, [fetchChatsAgain]);
 
   return (
-    <div className="col-md-3 chat-list-container">
+    <div
+      className={`chat-list-container ${
+        selectedChat ? "hide-on-tablet" : "show-on-tablet"
+      }`}
+    >
       <div
         className="d-flex align-items-center justify-content-between g-2"
         style={{ padding: "8px" }}

@@ -15,13 +15,20 @@ import groupAvatar from "../../assets/images/groupAvatar.png";
 
 var socket, selectedChatCompare;
 export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
-  const { user, selectedChat, notifications, setNotifications } = ChatState();
+  const {
+    user,
+    selectedChat,
+    setSelectedChat,
+    notifications,
+    setNotifications,
+  } = ChatState();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState();
   const token = localStorage.getItem("token");
   const [socketConnected, setSocketConnected] = useState(false);
   const [typing, setTyping] = useState(false);
+  const [isShowChatList, setIsShowChatList] = useState(false);
 
   const defaultOptions = {
     loop: true,
@@ -100,6 +107,10 @@ export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
   //   }
   // }, [selectedChat]);
 
+  const handleShowChatList = () => {
+    setSelectedChat(null);
+  };
+
   const handleKeydown = (e) => {
     if (e.key === "Enter" && message) {
       handleSendMessage();
@@ -145,12 +156,22 @@ export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
   };
 
   return (
-    <div className="col-md-9 chat-box-container">
+    <div
+      className={`chat-box-container ${
+        selectedChat ? "show-on-tablet" : "hide-on-tablet"
+      }`}
+    >
       {selectedChat ? (
         <>
           {/* Header */}
           <div className="header">
             <div className="header-left">
+              <button
+                className="btn btn-show-chat-list"
+                onClick={handleShowChatList}
+              >
+                <i class="fa-solid fa-arrow-left"></i>
+              </button>
               <div className="avatar">
                 <img
                   src={
@@ -162,36 +183,11 @@ export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
                 <i className="fa-solid fa-users"></i>
               </div>
               {selectedChat.isGroupChat ? (
-                <>
-                  <span className="name">{selectedChat.chatName}</span>
-                  {isOpenModal ? (
-                    user._id === selectedChat.groupAdmin._id ? (
-                      <UpdateGroupChatModal
-                        fetchChatsAgain={fetchChatsAgain}
-                        setFetchChatsAgain={setFetchChatsAgain}
-                        onClose={() => setIsOpenModal(false)}
-                      />
-                    ) : (
-                      <ProfileGroupModal
-                        fetchChatsAgain={fetchChatsAgain}
-                        setFetchChatsAgain={setFetchChatsAgain}
-                        onClose={() => setIsOpenModal(false)}
-                      />
-                    )
-                  ) : null}
-                </>
+                <span className="name">{selectedChat.chatName}</span>
               ) : (
-                <>
-                  <span className="name">
-                    {getSenderName(user, selectedChat.users)}
-                  </span>
-                  {isOpenModal ? (
-                    <UserModal
-                      user={getSender(user, selectedChat.users)}
-                      onClose={() => setIsOpenModal(false)}
-                    />
-                  ) : null}
-                </>
+                <span className="name">
+                  {getSenderName(user, selectedChat.users)}
+                </span>
               )}
             </div>
 
@@ -248,6 +244,29 @@ export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
           Choose a user to chat
         </div>
       )}
+
+      {isOpenModal ? (
+        selectedChat.isGroupChat ? (
+          user._id === selectedChat.groupAdmin._id ? (
+            <UpdateGroupChatModal
+              fetchChatsAgain={fetchChatsAgain}
+              setFetchChatsAgain={setFetchChatsAgain}
+              onClose={() => setIsOpenModal(false)}
+            />
+          ) : (
+            <ProfileGroupModal
+              fetchChatsAgain={fetchChatsAgain}
+              setFetchChatsAgain={setFetchChatsAgain}
+              onClose={() => setIsOpenModal(false)}
+            />
+          )
+        ) : (
+          <UserModal
+            user={getSender(user, selectedChat.users)}
+            onClose={() => setIsOpenModal(false)}
+          />
+        )
+      ) : null}
     </div>
   );
 }

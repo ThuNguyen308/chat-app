@@ -181,7 +181,6 @@
     }
 }
 
-
 // header
 .dropdown {
     position: relative;
@@ -308,6 +307,8 @@
         // border-radius: 10px;
         border-right: 1px solid rgba(0, 0, 0, 0.2);
         overflow: hidden;
+        flex: 0 0 25%;
+        min-width: 250px;
     }
 
     .header {
@@ -377,7 +378,7 @@
 }
 
 .chat-box-container {
-    width: 100%;
+    flex: 1 1 75%;
     height: 100%;
     background-color: #fff;
     // border-radius: 10px;
@@ -466,7 +467,7 @@
             display: flex;
             align-items: center;
             gap: 4px;
-            margin-bottom: 8px;
+            margin-top: 8px;
         }
 
         .message-item.mine {
@@ -513,5 +514,36 @@
 
     .decs {
         flex: 1 1;
+    }
+}
+
+.btn.btn-show-chat-list {
+    display: none;
+}
+
+// Media query
+@media only screen and (max-width: 768px) {
+    .chat-list-container {
+        flex: 100%;
+    }
+
+    .chat-list-container.show-on-tablet {
+        display: block
+    }
+
+    .chat-box-container {
+        flex: 100%;
+    }
+
+    .chat-box-container.show-on-tablet {
+        display: flex;
+    }
+    
+    .hide-on-tablet {
+        display: none;
+    }
+    
+    .btn.btn-show-chat-list {
+        display: block;
     }
 }
