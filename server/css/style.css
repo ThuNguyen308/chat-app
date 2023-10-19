@@ -1,0 +1,122 @@
+/* Variables */
+:root {
+  --gray: #837f7f;
+  --green: #008f70;
+  --light-green: #28a745;
+  --input-height: 3.8rem;
+}
+
+/* Reset */
+html {
+  box-sizing: border-box;
+  font-size: 62.5%;
+}
+
+body {
+  background-image: url(../assets/images/pattern.jpeg);
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  box-sizing: inherit;
+  -webkit-tap-highlight-color: transparent;
+  font-size: 1.6rem;
+  /* Font family */
+  font-family: sans-serif;
+}
+
+label,
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  outline: none;
+}
+
+/* Input */
+input {
+  width: 100%;
+  border: 0.1rem solid var(--gray);
+  border-radius: 0.5rem;
+  padding: 0 1.2rem;
+  line-height: var(--input-height);
+}
+
+input:focus {
+  border-color: var(--light-green);
+  background-color: rgba(40, 167, 70, 0.0941176471);
+}
+
+/* Button */
+.btn {
+  display: flex;
+  font-weight: 400;
+  justify-content: center;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 1.5;
+  font-weight: 500;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.5rem;
+  background-color: #e9e9e9;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+.btn-primary {
+  color: #ffffff;
+  background-color: var(--green);
+}
+
+/* Form */
+.container-form {
+  width: 100%;
+  max-width: 57.6rem;
+  padding: 4rem 1.6rem;
+  margin: auto;
+}
+
+.form-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.5rem;
+  background-color: #fff;
+  padding: 1.2rem;
+}
+
+.form-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.form-inner > button {
+  margin-top: 0.8rem;
+}
+
+.form-group label {
+  display: block;
+  width: 100%;
+  font-weight: 500;
+}
+
+.input-group {
+  position: relative;
+}
+
+.input-group-btn {
+  position: absolute;
+  top: 50%;
+  right: 0.4rem;
+  padding: 0 0.8rem;
+  transform: translateY(-50%);
+  line-height: 3rem;
+}

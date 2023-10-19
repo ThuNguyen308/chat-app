@@ -19,6 +19,7 @@ dotenv.config();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json()); //send and recieve data in Json format
 app.use(cors());
+app.use(express.static("./server"));
 app.set("views", "./server/views");
 app.set("view engine", "ejs");
 connectDB();
