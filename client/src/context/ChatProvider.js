@@ -15,9 +15,7 @@ const ChatProvider = ({ children }) => {
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
     setUser(userInfo);
 
-    if (!userInfo) {
-      navigate("/");
-    } else {
+    if (userInfo) {
       navigate("/chats");
     }
   }, [navigate]);

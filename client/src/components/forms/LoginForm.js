@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function LoginForm() {
   const navigate = useNavigate();
@@ -52,6 +52,7 @@ export default function LoginForm() {
           onChange={(e) => setEmail(e.target.value)}
         />
       </div>
+
       <div className="form-group">
         <label htmlFor="password">Password</label>
         <div className="input-group">
@@ -67,6 +68,15 @@ export default function LoginForm() {
             {showPassword ? "Hide" : "Show"}
           </button>
         </div>
+      </div>
+
+      <div>
+        <Link
+          style={{ fontSize: "1.4rem", float: "right", fontStyle: "italic" }}
+          to="/reset-password"
+        >
+          Forgot Password
+        </Link>
       </div>
       <button
         className="btn btn-primary"

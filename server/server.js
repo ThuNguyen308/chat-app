@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import { Server } from "socket.io";
+import ejs from "ejs";
 
 import { connectDB } from "./config/db.js";
 
@@ -15,8 +16,11 @@ const PORT = process.env.PORT || 5000;
 
 // Middlewares
 dotenv.config();
-app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json()); //send and recieve data in Json format
 app.use(cors());
+app.set("views", "./server/views");
+app.set("view engine", "ejs");
 connectDB();
 
 // Routes

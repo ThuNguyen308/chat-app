@@ -23,7 +23,6 @@ const requireSignIn = async (req, res, next) => {
     req.user = user;
     next();
   } catch (err) {
-    console.log("loi na");
     console.log(err);
     res.status(500).send({ success: false, message: "Auth failed" });
   }
