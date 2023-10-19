@@ -128,7 +128,7 @@ const resetPasswordController = async (req, res) => {
                 padding: 10px 20px;
                 background: #0000f9cc;
                 color: #fff;
-                position: absolute;
+                position: relative;
                 left: 50%;
                 transform: translateX(-50%);
                 margin: 10px;
