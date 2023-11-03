@@ -11,6 +11,12 @@ import requireSignIn from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
+router.get("/authentication", requireSignIn, (req, res) => {
+  return res.status(200).send({
+    success: true,
+    message: "Authentication successful",
+  });
+});
 router.post("/register", registerController);
 router.post("/login", loginController);
 router.post("/reset-password", resetPasswordController);

@@ -5,8 +5,6 @@ import { isSenderLastMessage, isUserMessage } from "../helper/ChatLogics";
 export default function ChatContent({ messages }) {
   const { user } = ChatState();
 
-  // const chatScrollRef = useRef();
-  // const messageListRef = useRef();
   const messageEndRef = useRef();
 
   useEffect(() => {
@@ -17,7 +15,6 @@ export default function ChatContent({ messages }) {
   }, [messages]);
 
   return (
-    // <div className="chat-scroll">
     <div className="message-list">
       {messages.map((m, index) => (
         <div
@@ -35,6 +32,5 @@ export default function ChatContent({ messages }) {
       ))}
       <div ref={messageEndRef} />
     </div>
-    // </div>
   );
 }

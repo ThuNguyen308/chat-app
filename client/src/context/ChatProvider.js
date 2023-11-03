@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -12,13 +13,36 @@ const ChatProvider = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-    setUser(userInfo);
+    const token = JSON.parse(localStorage.getItem("token"));
+    console.log("token", localStorage.getItem("token"));
+    const fetchUser = async () => {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const res = await axios.get(
+        process.env.REACT_APP_API + "/api/user/authentication",
+        config
+      );
+      if (res.data?.success) {
+        setUser(JSON.parse(localStorage.getItem("userInfo")));
+        navigate("/chats");
+      } else {
+        navigate("/");
+      }
+    };
 
-    if (userInfo) {
-      navigate("/chats");
+    if (token) {
+      fetchUser();
+    } else {
+      navigate("/");
     }
-  }, [navigate]);
+
+    // if (userInfo) {
+    //   navigate("/chats");
+    // }
+  }, []);
 
   return (
     <ChatContext.Provider

@@ -39,10 +39,8 @@ export default function SearchDrawer({ isOpen, onClose }) {
   const handleAccessChat = async (userId) => {
     try {
       const token = localStorage.getItem("token");
-      // setLoadingChat(true);
       const config = {
         headers: {
-          // "Content-type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       };
@@ -55,7 +53,6 @@ export default function SearchDrawer({ isOpen, onClose }) {
       if (!chats.find((c) => c._id === data.chat._id))
         setChats([data.chat, ...chats]);
       setSelectedChat(data.chat);
-      // setLoadingChat(false);
       onClose();
     } catch (error) {
       toast.error("Error access the chat");

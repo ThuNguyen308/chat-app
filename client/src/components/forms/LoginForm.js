@@ -2,9 +2,11 @@ import axios from "axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
+import { ChatState } from "../../context/ChatProvider";
 
 export default function LoginForm() {
   const navigate = useNavigate();
+  const { setUser } = ChatState();
 
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -30,7 +32,8 @@ export default function LoginForm() {
       if (data.success) {
         toast.success("Login successful.");
         localStorage.setItem("userInfo", JSON.stringify(data.user));
-        localStorage.setItem("token", data.token);
+        localStorage.setItem("token", JSON.stringify(data.token));
+        setUser(data.user);
         navigate("/chats");
       } else {
         toast.error(data.message);

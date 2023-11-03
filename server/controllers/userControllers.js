@@ -12,7 +12,7 @@ const registerController = async (req, res) => {
     const { name, email, password, pic } = req.body;
     if (!name || !email || !password) {
       return res
-        .status(500)
+        .status(200)
         .send({ success: false, message: "Please fill all field" });
     }
 
@@ -20,7 +20,7 @@ const registerController = async (req, res) => {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res
-        .status(500)
+        .status(409)
         .send({ success: false, message: "User already exists." });
     }
 
@@ -46,7 +46,7 @@ const loginController = async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {
       return res
-        .status(401)
+        .status(200)
         .send({ success: false, message: "Please fill all field" });
     }
 
@@ -60,7 +60,7 @@ const loginController = async (req, res) => {
     const isSamePassword = await comparePassword(password, user?.password);
     if (!isSamePassword) {
       return res
-        .status(401)
+        .status(200)
         .send({ success: false, message: "Password is wrong" });
     }
 
