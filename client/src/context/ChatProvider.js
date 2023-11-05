@@ -14,7 +14,6 @@ const ChatProvider = ({ children }) => {
 
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem("token"));
-    console.log("token", localStorage.getItem("token"));
     const fetchUser = async () => {
       const config = {
         headers: {
@@ -22,13 +21,15 @@ const ChatProvider = ({ children }) => {
         },
       };
       const res = await axios.get(
-        process.env.REACT_APP_API + "/api/user/authentication",
+        process.env.REACT_APP_API + "/user/authentication",
         config
       );
       if (res.data?.success) {
         setUser(JSON.parse(localStorage.getItem("userInfo")));
         navigate("/chats");
       } else {
+        localStorage.removeItem("token");
+        localStorage.removeItem("userInfo");
         navigate("/");
       }
     };

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import GroupChatModal from "../modal/GroupChatModal";
 import { ChatState } from "../../context/ChatProvider";
 import toast from "react-hot-toast";
-import axios from "axios";
+import axios from "../../services/customize-axios";
 import { getSender, getSenderName } from "../../helper/ChatLogics";
 import groupAvatar from "../../assets/images/groupAvatar.png";
 
@@ -15,23 +15,20 @@ export default function ChatList({ fetchChatsAgain }) {
   useEffect(() => {
     const fetchChats = async () => {
       try {
-        const token = localStorage.getItem("token");
+        // const token = JSON.parse(localStorage.getItem("token"));
+        // console.log(`Bearer ${token}`);
+        // const config = {
+        //   headers: {
+        //     Authorization: `Bearer ${token}`,
+        //   },
+        // };
 
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        };
-
-        const { data } = await axios.get(
-          process.env.REACT_APP_API + `/api/chat`,
-          config
-        );
+        const data = await axios.get(`/chat`);
 
         if (data.success) {
           setChats(data.chats);
         } else {
-          toast.error("Fetch data failed");
+          toast.error(data.message);
         }
       } catch (error) {
         console.log(error);

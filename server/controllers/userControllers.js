@@ -1,11 +1,14 @@
-import generateToken from "../config/generateToken.js";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+} from "../helpers/tokenHelpers.js";
 import { comparePassword, hashPassword } from "../helpers/authHelpers.js";
 import User from "../models/UserModel.js";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 
 //@description     User register account
-//@route           POST /api/user/register
+//@route           POST /user/register
 //@access          Public
 const registerController = async (req, res) => {
   try {
@@ -39,33 +42,34 @@ const registerController = async (req, res) => {
 };
 
 //@description     User login
-//@route           POST /api/user/login
+//@route           POST /user/login
 //@access          Public
 const loginController = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
       return res
-        .status(200)
+        .status(400)
         .send({ success: false, message: "Please fill all field" });
     }
 
     const user = await User.findOne({ email });
     if (!user) {
       return res
-        .status(200)
+        .status(400)
         .send({ success: false, message: "Email is not registered" });
     }
 
     const isSamePassword = await comparePassword(password, user?.password);
     if (!isSamePassword) {
       return res
-        .status(200)
+        .status(400)
         .send({ success: false, message: "Password is wrong" });
     }
 
-    const token = generateToken(user._id);
-    res.status(201).send({
+    const accessToken = generateAccessToken(user._id);
+    const refreshToken = generateRefreshToken(user._id);
+    res.status(200).send({
       success: true,
       user: {
         _id: user._id,
@@ -73,7 +77,8 @@ const loginController = async (req, res) => {
         pic: user.pic,
         email: user.email,
       },
-      token,
+      accessToken,
+      refreshToken,
     });
   } catch (err) {
     console.log(err);
@@ -92,14 +97,14 @@ const resetPasswordController = async (req, res) => {
         .send({ success: false, message: "Email is not registed" });
     }
 
-    const secret = process.env.JWT_SECRET + existUser.password;
+    const secret = process.env.ACCESS_TOKEN_SECRET + existUser.password;
     const token = jwt.sign(
       { id: existUser._id, email: existUser.email },
       secret,
       { expiresIn: "5m" }
     );
 
-    const link = `http://localhost:5000/api/user/reset-password/${existUser._id}/${token}`;
+    const link = `http://localhost:5000/user/reset-password/${existUser._id}/${token}`;
 
     var transporter = nodemailer.createTransport({
       service: "gmail",
@@ -167,7 +172,7 @@ const getResetPasswordController = async (req, res) => {
       return res.send("User not found");
     }
 
-    const secret = process.env.JWT_SECRET + existUser.password;
+    const secret = process.env.ACCESS_TOKEN_SECRET + existUser.password;
     const verify = jwt.verify(token, secret);
     res.render("index", { email: verify.email, status: "Not verified" });
   } catch (err) {
@@ -189,7 +194,7 @@ const postResetPasswordController = async (req, res) => {
       return res.send("User not found");
     }
 
-    const secret = process.env.JWT_SECRET + existUser.password;
+    const secret = process.env.ACCESS_TOKEN_SECRET + existUser.password;
     const verify = jwt.verify(token, secret);
     const encryptedPassword = await hashPassword(password);
 

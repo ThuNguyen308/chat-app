@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../../services/customize-axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
@@ -22,24 +22,20 @@ export default function LoginForm() {
     }
 
     try {
-      const { data } = await axios.post(
-        process.env.REACT_APP_API + "/api/user/login",
-        {
-          email,
-          password,
-        }
-      );
+      const data = await axios.post("/user/login", {
+        email,
+        password,
+      });
       if (data.success) {
         toast.success("Login successful.");
         localStorage.setItem("userInfo", JSON.stringify(data.user));
-        localStorage.setItem("token", JSON.stringify(data.token));
+        localStorage.setItem("token", JSON.stringify(data.accessToken));
         setUser(data.user);
         navigate("/chats");
       } else {
         toast.error(data.message);
       }
     } catch (e) {
-      console.log(e);
       toast.error("Login failed.");
     }
     setLoading(false);

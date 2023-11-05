@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-import axios from "axios";
+import axios from "../../services/customize-axios";
 
 export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -61,20 +61,17 @@ export default function RegisterForm() {
     }
 
     try {
-      const { data } = await axios.post(
-        process.env.REACT_APP_API + "/api/user/register",
-        {
-          name,
-          email,
-          password,
-          pic,
-        }
-      );
+      const data = await axios.post("/user/register", {
+        name,
+        email,
+        password,
+        pic,
+      });
 
       if (data.success) {
         toast.success("Register successful.");
       } else {
-        toast.success("Register failed.");
+        toast.success(data.message);
       }
 
       setName();

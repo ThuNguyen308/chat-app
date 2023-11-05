@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../services/customize-axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -19,12 +19,9 @@ export default function ResetPasswordPage() {
     }
 
     try {
-      const { data } = await axios.post(
-        process.env.REACT_APP_API + "/api/user/reset-password",
-        {
-          email,
-        }
-      );
+      const data = await axios.post("/user/reset-password", {
+        email,
+      });
       if (data.success) {
         toast.success("Please check your email.");
         navigate("/chats");

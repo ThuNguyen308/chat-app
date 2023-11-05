@@ -2,7 +2,7 @@ import Chat from "../models/ChatModel.js";
 import User from "../models/UserModel.js";
 
 //@description     Create or fetch One to One Chat
-//@route           POST /api/chat/
+//@route           POST /chat/
 //@access          Protected
 const accessChatController = async (req, res) => {
   try {
@@ -223,7 +223,7 @@ const removeFromGroup = async (req, res) => {
 };
 
 // @desc    Add user to Group / Leave
-// @route   PUT /api/chat/groupadd
+// @route   PUT /chat/groupadd
 // @access  Protected
 const addToGroup = async (req, res) => {
   try {

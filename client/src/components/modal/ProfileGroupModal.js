@@ -2,7 +2,7 @@ import React from "react";
 import { ChatState } from "../../context/ChatProvider";
 import UserBadgeItem from "../UserItem/UserBadgeItem";
 import toast from "react-hot-toast";
-import axios from "axios";
+import axios from "../../services/customize-axios";
 
 export default function ProfileGroupModal({
   onClose,
@@ -13,21 +13,11 @@ export default function ProfileGroupModal({
 
   const handleRemoveUser = async () => {
     try {
-      const token = localStorage.getItem("token");
       // setLoading(true);
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      const { data } = await axios.put(
-        process.env.REACT_APP_API + `/api/chat/remove-from-group`,
-        {
-          chatId: selectedChat._id,
-          userId: user._id,
-        },
-        config
-      );
+      const data = await axios.put(`/chat/remove-from-group`, {
+        chatId: selectedChat._id,
+        userId: user._id,
+      });
 
       if (data.success) {
         setSelectedChat(data.chat);
@@ -35,7 +25,7 @@ export default function ProfileGroupModal({
         toast.success("Success to leave group");
         setSelectedChat(null);
       } else {
-        toast.error("Failed to leave group");
+        toast.error(data.message);
       }
       // setLoading(false);
     } catch (error) {

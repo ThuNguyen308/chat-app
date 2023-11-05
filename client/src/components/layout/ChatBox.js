@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../../services/customize-axios";
 import toast from "react-hot-toast";
 import io from "socket.io-client";
 import Lottie from "react-lottie";
@@ -25,7 +25,7 @@ export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState();
-  const token = localStorage.getItem("token");
+  const token = JSON.parse(localStorage.getItem("token"));
   const [socketConnected, setSocketConnected] = useState(false);
   const [typing, setTyping] = useState(false);
   const [isShowChatList, setIsShowChatList] = useState(false);
@@ -70,19 +70,12 @@ export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
       if (!selectedChat) return;
 
       try {
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        };
-
-        const { data } = await axios.get(
-          process.env.REACT_APP_API + `/api/message/${selectedChat._id}`,
-          config
-        );
+        const data = await axios.get(`/message/${selectedChat._id}`);
         if (data.success) {
           setMessages(data.messages);
           socket.emit("join chat", selectedChat._id);
+        } else {
+          toast.error(data.message);
         }
       } catch (error) {
         console.log(error);
@@ -126,7 +119,7 @@ export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
       };
 
       const { data } = await axios.post(
-        process.env.REACT_APP_API + `/api/message`,
+        process.env.REACT_APP_API + `/message`,
         {
           content: message,
           chatId: selectedChat,

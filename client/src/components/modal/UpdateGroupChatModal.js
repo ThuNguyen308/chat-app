@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../../services/customize-axios";
 import React, { useState } from "react";
 import UserListItem from "../UserItem/UserListItem";
 import toast from "react-hot-toast";
@@ -10,28 +10,20 @@ export default function UpdateGroupChatModal({
   fetchChatsAgain,
   setFetchChatsAgain,
 }) {
-  const { chats, setChats, selectedChat, setSelectedChat } = ChatState();
+  const { selectedChat, setSelectedChat } = ChatState();
   const [groupChatName, setGroupChatName] = useState(selectedChat.chatName);
   const [searchResult, setSearchResult] = useState([]);
   const [isLoadingRename, setIsLoadingRename] = useState(false);
-  const token = localStorage.getItem("token");
 
   const handleSearch = async (keyword) => {
     try {
       //   setLoading(true);
-
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      const { data } = await axios.get(
-        process.env.REACT_APP_API + `/api/user/search/${keyword}`,
-        config
-      );
-
-      setSearchResult(data.users);
+      const data = await axios.get(`/user/search/${keyword}`);
+      if (data.success) {
+        setSearchResult(data.users);
+      } else {
+        toast.error(data.message);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -46,26 +38,17 @@ export default function UpdateGroupChatModal({
       }
 
       // setLoading(true);
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      const { data } = await axios.put(
-        process.env.REACT_APP_API + `/api/chat/add-to-group`,
-        {
-          chatId: selectedChat._id,
-          userId: userToAdd._id,
-        },
-        config
-      );
+      const data = await axios.put(`/chat/add-to-group`, {
+        chatId: selectedChat._id,
+        userId: userToAdd._id,
+      });
 
       if (data.success) {
         setSelectedChat(data.chat);
         setFetchChatsAgain(!fetchChatsAgain);
         toast.success("Success to add");
       } else {
-        toast.error("Failed to add user");
+        toast.error(data.message);
       }
       // setLoading(false);
     } catch (error) {
@@ -77,26 +60,17 @@ export default function UpdateGroupChatModal({
   const handleRemoveUser = async (userToRemove) => {
     try {
       // setLoading(true);
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      const { data } = await axios.put(
-        process.env.REACT_APP_API + `/api/chat/remove-from-group`,
-        {
-          chatId: selectedChat._id,
-          userId: userToRemove._id,
-        },
-        config
-      );
+      const data = await axios.put(`/chat/remove-from-group`, {
+        chatId: selectedChat._id,
+        userId: userToRemove._id,
+      });
 
       if (data.success) {
         setSelectedChat(data.chat);
         setFetchChatsAgain(!fetchChatsAgain);
         toast.success("Success to remove user");
       } else {
-        toast.error("Failed to remove user");
+        toast.error(data.message);
       }
       // setLoading(false);
     } catch (error) {
@@ -112,26 +86,17 @@ export default function UpdateGroupChatModal({
     }
 
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      const { data } = await axios.put(
-        process.env.REACT_APP_API + `/api/chat/rename-group`,
-        {
-          chatId: selectedChat._id,
-          chatName: groupChatName,
-        },
-        config
-      );
+      const { data } = await axios.put(`/chat/rename-group`, {
+        chatId: selectedChat._id,
+        chatName: groupChatName,
+      });
       if (data.success) {
         setSelectedChat(data.updatedChat);
         setFetchChatsAgain(!fetchChatsAgain);
         onClose();
         toast.success("Rename success!");
       } else {
-        toast.error("Failed to Rename the Group chat!");
+        toast.error(data.message);
       }
     } catch (error) {
       toast.error("Failed to Rename the Group chat!");
@@ -141,15 +106,8 @@ export default function UpdateGroupChatModal({
 
   const deleteGroup = async () => {
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
       const { data } = await axios.delete(
-        process.env.REACT_APP_API +
-          `/api/chat/delete-group/${selectedChat._id}`,
-        config
+        `/chat/delete-group/${selectedChat._id}`
       );
       if (data.success) {
         setSelectedChat(data.updatedChat);
@@ -157,7 +115,7 @@ export default function UpdateGroupChatModal({
         onClose();
         toast.success("Delete group success!");
       } else {
-        toast.error("Failed to Delete group!");
+        toast.error(data.message);
       }
     } catch (error) {
       toast.error("Failed to Delete group!");

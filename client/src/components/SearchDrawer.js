@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import UserListItem from "./UserItem/UserListItem";
 import ChatListLoading from "./ChatListLoading";
-import axios from "axios";
+import axios from "../services/customize-axios";
 import { ChatState } from "../context/ChatProvider";
 import toast from "react-hot-toast";
 
@@ -10,26 +10,19 @@ export default function SearchDrawer({ isOpen, onClose }) {
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const { user, chats, setChats, setSelectedChat } = ChatState();
-
-  useEffect(() => {}, []);
+  const token = JSON.parse(localStorage.getItem("token"));
 
   const handleSearch = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
 
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
+      const data = await axios.get(`/user/search/${keyword}`);
 
-      const { data } = await axios.get(
-        process.env.REACT_APP_API + `/api/user/search/${keyword}`,
-        config
-      );
-
-      setSearchResult(data.users);
+      if (data.success) {
+        setSearchResult(data.users);
+      } else {
+        toast.error(data.message);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -38,14 +31,13 @@ export default function SearchDrawer({ isOpen, onClose }) {
 
   const handleAccessChat = async (userId) => {
     try {
-      const token = localStorage.getItem("token");
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       };
       const { data } = await axios.post(
-        process.env.REACT_APP_API + `/api/chat`,
+        process.env.REACT_APP_API + `/chat`,
         { userId },
         config
       );

@@ -12,9 +12,10 @@ const requireSignIn = async (req, res, next) => {
     }
 
     token = req.headers.authorization.split(" ")[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
+    console.log("----", token);
+    const decoded = await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     const user = await User.findById(decoded.id).select("-password");
+
     if (!user) {
       return res
         .status(401)

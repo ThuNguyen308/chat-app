@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../../services/customize-axios";
 import React, { useEffect, useState } from "react";
 import UserListItem from "../UserItem/UserListItem";
 import toast from "react-hot-toast";
@@ -11,24 +11,18 @@ export default function GroupChatModal({ onClose }) {
   const [searchResult, setSearchResult] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const { chats, setChats } = ChatState();
-  const token = localStorage.getItem("token");
 
   const handleSearch = async (keyword) => {
     try {
       //   setLoading(true);
 
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
+      const data = await axios.get(`/user/search/${keyword}`);
 
-      const { data } = await axios.get(
-        process.env.REACT_APP_API + `/api/user/search/${keyword}`,
-        config
-      );
-
-      setSearchResult(data.users);
+      if (data.success) {
+        setSearchResult(data.users);
+      } else {
+        toast.error(data.message);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -54,7 +48,7 @@ export default function GroupChatModal({ onClose }) {
 
   const handleRemoveUser = (userToRemove) => {
     setSelectedUsers(
-      selectedUsers.filter((user) => user._id != userToRemove._id)
+      selectedUsers.filter((user) => user._id !== userToRemove._id)
     );
   };
 
@@ -63,21 +57,11 @@ export default function GroupChatModal({ onClose }) {
       toast.error("Please fill all the field");
       return;
     }
-
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      const { data } = await axios.post(
-        process.env.REACT_APP_API + `/api/chat/create-group`,
-        {
-          name: groupChatName,
-          users: selectedUsers.map((u) => u._id),
-        },
-        config
-      );
+      const data = await axios.post(`/chat/create-group`, {
+        name: groupChatName,
+        users: selectedUsers.map((u) => u._id),
+      });
       setChats([data.fullGroupChat, ...chats]);
       onClose();
       toast.success("New Group Chat Created!");
