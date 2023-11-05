@@ -12,8 +12,9 @@ const ChatProvider = ({ children }) => {
 
   const navigate = useNavigate();
 
+  console.log("vo day");
   useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("token"));
+    const token = localStorage.getItem("token");
     const fetchUser = async () => {
       const config = {
         headers: {
