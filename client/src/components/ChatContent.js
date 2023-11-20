@@ -4,13 +4,10 @@ import { isSenderLastMessage, isUserMessage } from "../helper/ChatLogics";
 
 export default function ChatContent({ messages }) {
   const { user } = ChatState();
-
   const messageEndRef = useRef();
 
   useEffect(() => {
-    const scrollToBottom = () => {
-      messageEndRef.current?.scrollIntoView();
-    };
+    const scrollToBottom = () => messageEndRef.current?.scrollIntoView();
     scrollToBottom();
   }, [messages]);
 
