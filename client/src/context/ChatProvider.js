@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../services/customize-axios";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -12,20 +12,10 @@ const ChatProvider = ({ children }) => {
 
   const navigate = useNavigate();
 
-  console.log("vo day");
   useEffect(() => {
-    const token = localStorage.getItem("token");
     const fetchUser = async () => {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      const res = await axios.get(
-        process.env.REACT_APP_API + "/user/authentication",
-        config
-      );
-      if (res.data?.success) {
+      const data = await axios.get("user/authentication");
+      if (data.success) {
         setUser(JSON.parse(localStorage.getItem("userInfo")));
         navigate("/chats");
       } else {
@@ -35,7 +25,7 @@ const ChatProvider = ({ children }) => {
       }
     };
 
-    if (token) {
+    if (localStorage.getItem("token")) {
       fetchUser();
     } else {
       navigate("/");

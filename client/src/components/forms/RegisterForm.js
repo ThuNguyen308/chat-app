@@ -50,6 +50,7 @@ export default function RegisterForm() {
   const handleSubmit = async () => {
     setLoading(true);
     if (!name || !email || !password || !confirmPassword) {
+      console.log(name, email, password, confirmPassword);
       toast.error("Please fill all the Fields.");
       setLoading(false);
       return;

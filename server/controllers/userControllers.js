@@ -86,6 +86,9 @@ const loginController = async (req, res) => {
   }
 };
 
+//@description     User forgot password
+//@route           POST /user/reset-password
+//@access          Public
 const resetPasswordController = async (req, res) => {
   try {
     const { email } = req.body;
@@ -101,10 +104,10 @@ const resetPasswordController = async (req, res) => {
     const token = jwt.sign(
       { id: existUser._id, email: existUser.email },
       secret,
-      { expiresIn: "5m" }
+      { expiresIn: "10m" }
     );
 
-    const link = `http://localhost:5000/user/reset-password/${existUser._id}/${token}`;
+    const link = `http://localhost:5000/api/user/reset-password/${existUser._id}/${token}`;
 
     var transporter = nodemailer.createTransport({
       service: "gmail",
@@ -149,10 +152,12 @@ const resetPasswordController = async (req, res) => {
 
     transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
-        res.status(500).json({ msg: "Email sent failed" });
+        res.status(500).send({ success: false, message: "Email sent failed." });
         console.log(error);
       } else {
-        res.status(201).json({ msg: "Email sent" });
+        res
+          .status(200)
+          .send({ success: true, message: "Please check your email." });
         console.log("Email sent: " + info.response);
       }
     });
@@ -173,7 +178,7 @@ const getResetPasswordController = async (req, res) => {
     }
 
     const secret = process.env.ACCESS_TOKEN_SECRET + existUser.password;
-    const verify = jwt.verify(token, secret);
+    const verify = await jwt.verify(token, secret);
     res.render("index", { email: verify.email, status: "Not verified" });
   } catch (err) {
     console.log(err);

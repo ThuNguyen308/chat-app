@@ -16,3 +16,7 @@ export const isSenderLastMessage = (message, messages, index) => {
     message.sender._id !== messages[index + 1].sender._id
   );
 };
+
+export const isSenderFirstMessage = (message, messages, index) => {
+  return index === 0 || message.sender._id !== messages[index - 1].sender._id;
+};

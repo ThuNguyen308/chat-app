@@ -41,8 +41,14 @@ const io = new Server(server, {
   pingTimeout: 60000,
   cors: {
     origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+    transports: ["websocket", "polling"],
+    credentials: true,
   },
 });
+
+//Roles: sockets - stand for users, room - stands for chanel where users can join or leave
+//Keywords: on(event, data) - listen event, emit(event, data) - broadcast event, join(room) - join a room, socket.in(room).emit - a way to broadcast a message to all users in a particular room
 
 io.on("connection", (socket) => {
   console.log("Connected to socket.io");
@@ -71,7 +77,9 @@ io.on("connection", (socket) => {
   });
 
   socket.on("typing", (room) => {
-    socket.in(room).emit("typing", room);
+    socket
+      .to(room) // .in(room)
+      .emit("typing", room);
   });
 
   socket.on("stop typing", (room) => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "../../services/customize-axios";
 import toast from "react-hot-toast";
 import io from "socket.io-client";
@@ -13,7 +13,7 @@ import ChatContent from "../ChatContent";
 import animationData from "../../assets/animations/typing.json";
 import groupAvatar from "../../assets/images/groupAvatar.png";
 
-var socket, selectedChatCompare;
+var selectedChatCompare;
 export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
   const {
     user,
@@ -22,10 +22,11 @@ export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
     notifications,
     setNotifications,
   } = ChatState();
+  const previosSelectedChat = useRef();
+  const [socket, setSocket] = useState(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [messages, setMessages] = useState([]);
-  const [message, setMessage] = useState();
-  const token = JSON.parse(localStorage.getItem("token"));
+  const [message, setMessage] = useState("");
   const [socketConnected, setSocketConnected] = useState(false);
   const [typing, setTyping] = useState(false);
   const [isShowChatList, setIsShowChatList] = useState(false);
@@ -40,13 +41,13 @@ export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
   };
 
   useEffect(() => {
-    socket = io(process.env.REACT_APP_API);
-    socket.emit("setup", user);
-    socket.on("connected", () => {
+    const newSocket = io(process.env.REACT_APP_API);
+    setSocket(newSocket);
+    newSocket.emit("setup", user);
+    newSocket.on("connected", () => {
       setSocketConnected(true);
     });
-    socket.on("message recieved", (newMessageRecieved) => {
-      // console.log("message recived", selectedChatCompare, newMessageRecieved);
+    newSocket.on("message recieved", (newMessageRecieved) => {
       //if current chat !== chat of message recieved
       if (selectedChatCompare?._id !== newMessageRecieved.chat._id) {
         //if not exist info chat in notis
@@ -63,7 +64,10 @@ export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
         setFetchChatsAgain(!fetchChatsAgain);
       }
     });
-  });
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -86,19 +90,23 @@ export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
     fetchMessages();
     //su dung cho noti
     selectedChatCompare = selectedChat;
+    if (socket) {
+      socket.on("typing", (room) => {
+        // console.log(
+        //   room,
+        //   selectedChatCompare._id,
+        //   selectedChat._id,
+        //   room === selectedChatCompare._id
+        // );
+        if (room === selectedChatCompare?._id) setTyping(true);
+      });
+      socket.on("stop typing", (room) => {
+        if (room === selectedChatCompare?._id) setTyping(false);
+      });
+    }
+    setTyping(false);
+    setMessage("");
   }, [selectedChat]);
-
-  // useEffect(() => {
-  //   setTyping(false);
-  //   if (selectedChat) {
-  //     socket.on("typing", (room) => {
-  //       if (room === selectedChat._id) setTyping(true);
-  //     });
-  //     socket.on("stop typing", (room) => {
-  //       if (room === selectedChat._id) setTyping(false);
-  //     });
-  //   }
-  // }, [selectedChat]);
 
   const handleShowChatList = () => {
     setSelectedChat(null);
@@ -112,29 +120,21 @@ export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
 
   const handleSendMessage = async () => {
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      const { data } = await axios.post(
-        process.env.REACT_APP_API + `/message`,
-        {
-          content: message,
-          chatId: selectedChat,
-        },
-        config
-      );
+      const data = await axios.post(`/message`, {
+        content: message,
+        chatId: selectedChat,
+      });
       if (data.success) {
         socket.emit("new message", data.message);
         socket.emit("stop typing", selectedChat._id);
         setMessages([...messages, data.message]);
         setMessage("");
         setFetchChatsAgain(!fetchChatsAgain);
+      } else {
+        toast.error(data.message);
       }
     } catch (error) {
-      toast.error("Error Occured!");
+      console.log(error);
     }
   };
 
@@ -163,7 +163,7 @@ export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
                 className="btn btn-show-chat-list"
                 onClick={handleShowChatList}
               >
-                <i class="fa-solid fa-arrow-left"></i>
+                <i className="fa-solid fa-arrow-left"></i>
               </button>
               <div className="avatar">
                 <img
@@ -194,12 +194,13 @@ export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
             <ChatContent messages={messages} />
             {typing ? (
               <div>
-                <Lottie
+                typing
+                {/* <Lottie
                   options={defaultOptions}
                   height={30}
                   width={50}
                   style={{ marginBottom: 15, marginLeft: 0, borderRadius: 30 }}
-                />
+                /> */}
               </div>
             ) : (
               <></>

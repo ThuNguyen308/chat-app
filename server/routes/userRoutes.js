@@ -19,8 +19,8 @@ router.get("/authentication", requireSignIn, (req, res) => {
 });
 router.post("/register", registerController);
 router.post("/login", loginController);
-router.post("/reset-password", resetPasswordController);
 router.get("/search/:keyword?", requireSignIn, searchUsersController);
+router.post("/reset-password", resetPasswordController);
 router.get("/reset-password/:id/:token", getResetPasswordController);
 router.post("/reset-password/:id/:token", postResetPasswordController);
 

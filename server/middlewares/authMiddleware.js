@@ -12,7 +12,6 @@ const requireSignIn = async (req, res, next) => {
     }
 
     token = req.headers.authorization.split(" ")[1];
-    console.log("----", token);
     const decoded = await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     const user = await User.findById(decoded.id).select("-password");
 
@@ -24,7 +23,7 @@ const requireSignIn = async (req, res, next) => {
     req.user = user;
     next();
   } catch (err) {
-    console.log(err);
+    console.log(err.message);
     res.status(500).send({ success: false, message: "Auth failed" });
   }
 };

@@ -23,8 +23,8 @@ export default function ResetPasswordPage() {
         email,
       });
       if (data.success) {
-        toast.success("Please check your email.");
-        navigate("/chats");
+        toast.success(data.message);
+        navigate("/");
       } else {
         toast.error(data.message);
       }

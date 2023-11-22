@@ -10,7 +10,6 @@ export default function SearchDrawer({ isOpen, onClose }) {
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const { user, chats, setChats, setSelectedChat } = ChatState();
-  const token = JSON.parse(localStorage.getItem("token"));
 
   const handleSearch = async () => {
     try {
@@ -31,16 +30,7 @@ export default function SearchDrawer({ isOpen, onClose }) {
 
   const handleAccessChat = async (userId) => {
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      const { data } = await axios.post(
-        process.env.REACT_APP_API + `/chat`,
-        { userId },
-        config
-      );
+      const data = await axios.post(`/chat`, { userId });
 
       if (!chats.find((c) => c._id === data.chat._id))
         setChats([data.chat, ...chats]);
