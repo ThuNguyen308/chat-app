@@ -10,10 +10,9 @@ import UserModal from "../modal/UserModal";
 import UpdateGroupChatModal from "../modal/UpdateGroupChatModal";
 import ProfileGroupModal from "../modal/ProfileGroupModal";
 import ChatContent from "../ChatContent";
-import animationData from "../../assets/animations/typing.json";
 import groupAvatar from "../../assets/images/groupAvatar.png";
 
-var selectedChatCompare;
+// var selectedChatCompare;
 export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
   const {
     user,
@@ -22,23 +21,16 @@ export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
     notifications,
     setNotifications,
   } = ChatState();
-  const previosSelectedChat = useRef();
+
+  const chatBoxWrapperRef = useRef();
+  const selectedChatCompareRef = useRef(selectedChat);
+
   const [socket, setSocket] = useState(null);
+  const [socketConnected, setSocketConnected] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
-  const [socketConnected, setSocketConnected] = useState(false);
   const [typing, setTyping] = useState(false);
-  const [isShowChatList, setIsShowChatList] = useState(false);
-
-  const defaultOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: animationData,
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
-    },
-  };
 
   useEffect(() => {
     const newSocket = io(process.env.REACT_APP_API);
@@ -47,32 +39,42 @@ export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
     newSocket.on("connected", () => {
       setSocketConnected(true);
     });
-    newSocket.on("message recieved", (newMessageRecieved) => {
-      //if current chat !== chat of message recieved
-      if (selectedChatCompare?._id !== newMessageRecieved.chat._id) {
-        //if not exist info chat in notis
-        if (
-          !notifications
-            .map((noti) => noti.chat._id)
-            .includes(newMessageRecieved.chat._id)
-        ) {
-          setNotifications([newMessageRecieved, ...notifications]);
-        }
-        setFetchChatsAgain(!fetchChatsAgain);
-      } else {
-        setMessages([...messages, newMessageRecieved]);
-        setFetchChatsAgain(!fetchChatsAgain);
-      }
-    });
+
     return () => {
       newSocket.disconnect();
     };
   }, []);
 
   useEffect(() => {
+    if (socket) {
+      socket.on("message recieved", (newMessageRecieved) => {
+        //if current chat !== chat of message recieved
+        if (
+          selectedChatCompareRef.current?._id !== newMessageRecieved.chat._id
+        ) {
+          //if not exist info chat in notis
+          if (
+            !notifications
+              .map((noti) => noti.chat._id)
+              .includes(newMessageRecieved.chat._id)
+          ) {
+            setNotifications([newMessageRecieved, ...notifications]);
+          }
+          setFetchChatsAgain(!fetchChatsAgain);
+        } else {
+          setMessages([...messages, newMessageRecieved]);
+          setFetchChatsAgain(!fetchChatsAgain);
+        }
+      });
+    }
+  }, [messages, selectedChat]);
+
+  useEffect(() => {
+    setTyping(false);
+    setMessage("");
+
     const fetchMessages = async () => {
       if (!selectedChat) return;
-
       try {
         const data = await axios.get(`/message/${selectedChat._id}`);
         if (data.success) {
@@ -82,30 +84,37 @@ export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
           toast.error(data.message);
         }
       } catch (error) {
-        console.log(error);
         toast.error("Fetch messages failed!");
       }
     };
-
     fetchMessages();
+
     //su dung cho noti
-    selectedChatCompare = selectedChat;
+    selectedChatCompareRef.current = selectedChat;
+
     if (socket) {
+      console.log(
+        "chat change",
+        selectedChatCompareRef.current?._id,
+        selectedChat?._id
+      );
       socket.on("typing", (room) => {
-        // console.log(
-        //   room,
-        //   selectedChatCompare._id,
-        //   selectedChat._id,
-        //   room === selectedChatCompare._id
-        // );
-        if (room === selectedChatCompare?._id) setTyping(true);
+        console.log(
+          "compare",
+          room,
+          selectedChatCompareRef.current?._id,
+          selectedChat._id,
+          room === selectedChat?._id
+        );
+        if (room === selectedChatCompareRef.current?._id) {
+          setTyping(true);
+          scrollToBottom();
+        }
       });
       socket.on("stop typing", (room) => {
-        if (room === selectedChatCompare?._id) setTyping(false);
+        if (room === selectedChatCompareRef.current?._id) setTyping(false);
       });
     }
-    setTyping(false);
-    setMessage("");
   }, [selectedChat]);
 
   const handleShowChatList = () => {
@@ -134,7 +143,7 @@ export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
         toast.error(data.message);
       }
     } catch (error) {
-      console.log(error);
+      toast.error("Error when sending message");
     }
   };
 
@@ -146,6 +155,11 @@ export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
     } else {
       socket.emit("stop typing", selectedChat._id);
     }
+  };
+
+  const scrollToBottom = () => {
+    chatBoxWrapperRef.current.scrollTop =
+      chatBoxWrapperRef.current.scrollHeight;
   };
 
   return (
@@ -190,21 +204,17 @@ export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
           </div>
 
           {/* Content */}
-          <div className="chat-box-wrapper">
+          <div className="chat-box-wrapper" ref={chatBoxWrapperRef}>
             <ChatContent messages={messages} />
-            {typing ? (
-              <div>
-                typing
-                {/* <Lottie
-                  options={defaultOptions}
-                  height={30}
-                  width={50}
-                  style={{ marginBottom: 15, marginLeft: 0, borderRadius: 30 }}
-                /> */}
-              </div>
-            ) : (
-              <></>
-            )}
+            <div>
+              {typing ? (
+                <div className="typing">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+              ) : null}
+            </div>
           </div>
 
           {/* Message input */}
