@@ -15,14 +15,6 @@ export default function ChatList({ fetchChatsAgain }) {
   useEffect(() => {
     const fetchChats = async () => {
       try {
-        // const token = JSON.parse(localStorage.getItem("token"));
-        // console.log(`Bearer ${token}`);
-        // const config = {
-        //   headers: {
-        //     Authorization: `Bearer ${token}`,
-        //   },
-        // };
-
         const data = await axios.get(`/chat`);
 
         if (data.success) {

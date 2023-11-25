@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import axios from "../../services/customize-axios";
 import toast from "react-hot-toast";
 import io from "socket.io-client";
-import Lottie from "react-lottie";
 
 import { ChatState } from "../../context/ChatProvider";
 import { getSender, getSenderName } from "../../helper/ChatLogics";

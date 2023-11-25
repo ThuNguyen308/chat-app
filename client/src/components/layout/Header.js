@@ -56,7 +56,7 @@ export default function Header() {
         </button>
 
         <div className="logo">
-          <img src={logo} />
+          <img src={logo} alt="logo" />
           <h3>Let's Talk</h3>
         </div>
 
@@ -103,7 +103,7 @@ export default function Header() {
               ref={dropdownRef}
             >
               <div className="avatar">
-                <img src={user.pic} />
+                <img src={user.pic} alt={user.name} />
               </div>
               <p>{user.name}</p>
               <i className="fa-solid fa-chevron-down"></i>

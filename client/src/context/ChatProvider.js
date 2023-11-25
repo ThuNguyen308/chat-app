@@ -30,10 +30,6 @@ const ChatProvider = ({ children }) => {
     } else {
       navigate("/");
     }
-
-    // if (userInfo) {
-    //   navigate("/chats");
-    // }
   }, []);
 
   return (

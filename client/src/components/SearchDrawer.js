@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import UserListItem from "./UserItem/UserListItem";
 import ChatListLoading from "./ChatListLoading";
 import axios from "../services/customize-axios";
@@ -9,7 +9,7 @@ export default function SearchDrawer({ isOpen, onClose }) {
   const [keyword, setKeyword] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { user, chats, setChats, setSelectedChat } = ChatState();
+  const { chats, setChats, setSelectedChat } = ChatState();
 
   const handleSearch = async () => {
     try {

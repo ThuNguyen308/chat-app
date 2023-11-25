@@ -14,7 +14,7 @@ export default function UserModal({ onClose, user }) {
         </div>
         <div className="content">
           <h3 className="name">{user.name}</h3>
-          <img src={user.pic} className="avatar" />
+          <img src={user.pic} alt={user.name} className="avatar" />
           <p className="email">{user.email}</p>
         </div>
       </div>
