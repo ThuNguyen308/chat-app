@@ -73,10 +73,17 @@
     }
 
     &-group {
+        display: flex;
+        flex-direction: column;
+
         label {
-            display: block;
-            width: 100%;
             font-weight: 500;
+        }
+
+        .error-message {
+            padding: 4px;
+            font-size: 12px;
+            color: ss-var($colors, "secondary", "red");
         }
     }
 }

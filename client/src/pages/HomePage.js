@@ -25,11 +25,15 @@ export default function HomePage() {
           </button>
         </div>
         <div className="logo">
-          <img src={logo} />
+          <img src={logo} alt="Let's talk" />
           <h1>Let's Talk</h1>
         </div>
         <div className="tab-content">
-          {tabIndex === 0 ? <LoginForm /> : <RegisterForm />}
+          {tabIndex === 0 ? (
+            <LoginForm />
+          ) : (
+            <RegisterForm toLogin={() => setTabIndex(0)} />
+          )}
         </div>
       </div>
     </div>

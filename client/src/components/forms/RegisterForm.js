@@ -1,17 +1,79 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import axios from "../../services/customize-axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleNotch } from "@fortawesome/free-solid-svg-icons";
 
-export default function RegisterForm() {
+export default function RegisterForm({ toLogin }) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-  const [name, setName] = useState();
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  const [confirmPassword, setConfirmPassword] = useState();
-  const [pic, setPic] = useState();
   const [loading, setLoading] = useState(false);
+  const [fields, setFields] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    pic: "",
+  });
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    pic: "",
+  });
+
+  const handleValidate = (name, value) => {
+    switch (name) {
+      case "name":
+        if (!value || value.trim() === "") {
+          return "Name is required";
+        } else {
+          return "";
+        }
+      case "email":
+        if (!value) {
+          return "Email is Required";
+        } else if (
+          !value.match(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/)
+        ) {
+          return "Email is invalid";
+        } else {
+          return "";
+        }
+      case "password":
+        if (!value) {
+          return "Password is Required";
+        } else if (
+          !value.match(
+            /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/
+          )
+        ) {
+          return "Password should be 8-20 charactors and include at least 1 uppercase letter, 1 lowercase letter, 1 number and 1 special charactor!";
+        } else {
+          return "";
+        }
+      case "confirmPassword":
+        if (!value) {
+          return "Confirm Password Required";
+        } else if (value !== fields.password) {
+          return "New Password and Confirm Password Must be Same";
+        } else {
+          return "";
+        }
+      default: {
+        return "";
+      }
+    }
+  };
+
+  const handleInput = (e) => {
+    setFields({ ...fields, [e.target.name]: e.target.value });
+    setErrors({
+      ...errors,
+      [e.target.name]: handleValidate(e.target.name, e.target.value),
+    });
+  };
 
   const postImage = async (pic) => {
     if (pic === undefined) {
@@ -39,7 +101,7 @@ export default function RegisterForm() {
           }
         );
         const res = await response.json();
-        setPic(res.url);
+        setFields({ ...fields, pic: res.url });
       } catch (error) {
         console.log(error);
       }
@@ -49,37 +111,41 @@ export default function RegisterForm() {
 
   const handleSubmit = async () => {
     setLoading(true);
-    if (!name || !email || !password || !confirmPassword) {
-      console.log(name, email, password, confirmPassword);
-      toast.error("Please fill all the Fields.");
-      setLoading(false);
-      return;
-    }
-    if (password !== confirmPassword) {
-      toast.error("Passwords do not match.");
+    let validationErrors = {};
+    Object.keys(fields).forEach((name) => {
+      const error = handleValidate(name, fields[name]);
+      if (error && error.length > 0) {
+        validationErrors[name] = error;
+      }
+    });
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       setLoading(false);
       return;
     }
 
     try {
       const data = await axios.post("/user/register", {
-        name,
-        email,
-        password,
-        pic,
+        name: fields.name,
+        email: fields.email,
+        password: fields.password,
+        pic: fields.pic,
       });
 
       if (data.success) {
+        setFields({
+          name: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+          pic: "",
+        });
         toast.success("Register successful.");
+        toLogin();
       } else {
         toast.success(data.message);
       }
-
-      setName();
-      setEmail();
-      setPassword();
-      setConfirmPassword();
-      setPic();
     } catch (e) {
       console.log(e);
       toast.error("Register failed.");
@@ -93,20 +159,22 @@ export default function RegisterForm() {
         <label htmlFor="name">Name</label>
         <input
           type="text"
-          id="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          name="name"
+          value={fields.name}
+          onChange={handleInput}
         />
+        <span className="error-message">{errors.name}</span>
       </div>
 
       <div className="form-group">
         <label htmlFor="email">Email</label>
         <input
           type="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          name="email"
+          value={fields.email}
+          onChange={handleInput}
         />
+        <span className="error-message">{errors.email}</span>
       </div>
 
       <div className="form-group">
@@ -114,9 +182,9 @@ export default function RegisterForm() {
         <div className="input-group">
           <input
             type={showPassword ? "text" : "password"}
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            name="password"
+            value={fields.password}
+            onChange={handleInput}
           />
           <button
             className="btn input-group-btn"
@@ -125,6 +193,7 @@ export default function RegisterForm() {
             {showPassword ? "Hide" : "Show"}
           </button>
         </div>
+        <span className="error-message">{errors.password}</span>
       </div>
 
       <div className="form-group">
@@ -132,9 +201,9 @@ export default function RegisterForm() {
         <div className="input-group">
           <input
             type={showConfirmPassword ? "text" : "password"}
-            id="password-confirm"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            name="confirmPassword"
+            value={fields.confirmPassword}
+            onChange={handleInput}
           />
           <button
             className="btn input-group-btn"
@@ -143,16 +212,12 @@ export default function RegisterForm() {
             {showConfirmPassword ? "Hide" : "Show"}
           </button>
         </div>
+        <span className="error-message">{errors.confirmPassword}</span>
       </div>
 
       <div className="form-group">
         <label htmlFor="image">Avatar</label>
-        <input
-          type="file"
-          accept="image/*"
-          id="image"
-          onChange={(e) => postImage(e.target.files[0])}
-        />
+        <input type="file" accept="image/*" id="image" onChange={handleInput} />
       </div>
 
       <button
@@ -161,10 +226,7 @@ export default function RegisterForm() {
         disabled={loading}
       >
         {loading && (
-          <i
-            className="fa fa-circle-o-notch fa-spin"
-            style={{ fontSize: 24 }}
-          ></i>
+          <FontAwesomeIcon className="loading-icon" icon={faCircleNotch} />
         )}
         Sign up
       </button>

@@ -1,3 +1,5 @@
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 
 export default function UserModal({ onClose, user }) {
@@ -9,7 +11,7 @@ export default function UserModal({ onClose, user }) {
         <div className="header">
           <h2>Infomation</h2>
           <span className="close-icon" onClick={onClose}>
-            <i className="fa-solid fa-xmark"></i>
+            <FontAwesomeIcon icon={faXmark} />
           </span>
         </div>
         <div className="content">

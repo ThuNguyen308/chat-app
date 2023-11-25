@@ -3,6 +3,13 @@ import SearchDrawer from "../SearchDrawer";
 import UserModal from "../modal/UserModal";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faMagnifyingGlass,
+  faBell,
+  faChevronDown,
+} from "@fortawesome/free-solid-svg-icons";
+
 import { ChatState } from "../../context/ChatProvider";
 import { getSenderName } from "../../helper/ChatLogics";
 import logo from "../../assets/images/logo.png";
@@ -51,7 +58,7 @@ export default function Header() {
           className="d-flex align-items-center g-1 btn"
           onClick={() => setIsOpenSearchDrawer(true)}
         >
-          <i className="fa-solid fa-magnifying-glass"></i>
+          <FontAwesomeIcon icon={faMagnifyingGlass} />
           <span>Search users</span>
         </button>
 
@@ -67,7 +74,7 @@ export default function Header() {
               ref={dropdownRef}
             >
               <div className="notification">
-                <i className="fa-solid fa-bell"></i>
+                <FontAwesomeIcon icon={faBell} />
                 <span className="badge">{notifications.length}</span>
               </div>
             </button>
@@ -106,7 +113,7 @@ export default function Header() {
                 <img src={user.pic} alt={user.name} />
               </div>
               <p>{user.name}</p>
-              <i className="fa-solid fa-chevron-down"></i>
+              <FontAwesomeIcon icon={faChevronDown} />
             </button>
             <ul className="dropdown-menu">
               <li

@@ -1,8 +1,11 @@
 import React from "react";
-import { ChatState } from "../../context/ChatProvider";
 import UserBadgeItem from "../UserItem/UserBadgeItem";
 import toast from "react-hot-toast";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
+
 import axios from "../../services/customize-axios";
+import { ChatState } from "../../context/ChatProvider";
 
 export default function ProfileGroupModal({
   onClose,
@@ -42,7 +45,7 @@ export default function ProfileGroupModal({
         <div className="header">
           <h2>Profile group chat</h2>
           <span className="close-icon" onClick={onClose}>
-            <i className="fa-solid fa-xmark"></i>
+            <FontAwesomeIcon icon={faXmark} />
           </span>
         </div>
 

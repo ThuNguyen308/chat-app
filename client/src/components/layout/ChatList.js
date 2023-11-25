@@ -5,6 +5,8 @@ import toast from "react-hot-toast";
 import axios from "../../services/customize-axios";
 import { getSender, getSenderName } from "../../helper/ChatLogics";
 import groupAvatar from "../../assets/images/groupAvatar.png";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function ChatList({ fetchChatsAgain }) {
   const { user, chats, setChats, selectedChat, setSelectedChat } = ChatState();
@@ -46,7 +48,7 @@ export default function ChatList({ fetchChatsAgain }) {
           onClick={() => setIsOpenCreateGroupChatModal(true)}
         >
           <span>New Group Chat</span>
-          <i className="fa-solid fa-plus"></i>
+          <FontAwesomeIcon icon={faPlus} />
         </button>
       </div>
       <div className="chat-list">

@@ -4,6 +4,8 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import "../styles/pages/HomePage.scss";
 import logo from "../assets/images/logo.png";
+import { faCircleNotch } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function ResetPasswordPage() {
   const navigate = useNavigate();
@@ -57,10 +59,7 @@ export default function ResetPasswordPage() {
             disabled={!email || loading}
           >
             {loading && (
-              <i
-                className="fa fa-circle-o-notch fa-spin"
-                style={{ fontSize: 24 }}
-              ></i>
+              <FontAwesomeIcon className="loading-icon" icon={faCircleNotch} />
             )}
             Reset password
           </button>

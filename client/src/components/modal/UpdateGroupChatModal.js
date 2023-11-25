@@ -4,6 +4,8 @@ import UserListItem from "../UserItem/UserListItem";
 import toast from "react-hot-toast";
 import UserBadgeItem from "../UserItem/UserBadgeItem";
 import { ChatState } from "../../context/ChatProvider";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
 export default function UpdateGroupChatModal({
   onClose,
@@ -130,7 +132,7 @@ export default function UpdateGroupChatModal({
         <div className="header">
           <h2>Update group chat</h2>
           <span className="close-icon" onClick={onClose}>
-            <i className="fa-solid fa-xmark"></i>
+            <FontAwesomeIcon icon={faXmark} />
           </span>
         </div>
 

@@ -2,6 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import axios from "../../services/customize-axios";
 import toast from "react-hot-toast";
 import io from "socket.io-client";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faArrowLeft,
+  faUsers,
+  faEye,
+  faPaperPlane,
+} from "@fortawesome/free-solid-svg-icons";
 
 import { ChatState } from "../../context/ChatProvider";
 import { getSender, getSenderName } from "../../helper/ChatLogics";
@@ -176,7 +183,7 @@ export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
                 className="btn btn-show-chat-list"
                 onClick={handleShowChatList}
               >
-                <i className="fa-solid fa-arrow-left"></i>
+                <FontAwesomeIcon icon={faArrowLeft} />
               </button>
               <div className="avatar">
                 <img
@@ -186,7 +193,7 @@ export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
                       : getSender(user, selectedChat.users).pic
                   }
                 />
-                <i className="fa-solid fa-users"></i>
+                <FontAwesomeIcon icon={faUsers} />
               </div>
               {selectedChat.isGroupChat ? (
                 <span className="name">{selectedChat.chatName}</span>
@@ -198,7 +205,7 @@ export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
             </div>
 
             <button className="btn" onClick={() => setIsOpenModal(true)}>
-              <i className="fa-solid fa-eye"></i>
+              <FontAwesomeIcon icon={faEye} />
             </button>
           </div>
 
@@ -230,7 +237,7 @@ export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
               onClick={handleSendMessage}
               disabled={!message}
             >
-              <i className="fa-solid fa-paper-plane"></i>
+              <FontAwesomeIcon icon={faPaperPlane} />
             </button>
           </div>
         </>

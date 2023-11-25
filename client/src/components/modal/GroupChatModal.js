@@ -4,6 +4,8 @@ import UserListItem from "../UserItem/UserListItem";
 import toast from "react-hot-toast";
 import UserBadgeItem from "../UserItem/UserBadgeItem";
 import { ChatState } from "../../context/ChatProvider";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
 export default function GroupChatModal({ onClose }) {
   const [groupChatName, setGroupChatName] = useState("");
@@ -79,7 +81,9 @@ export default function GroupChatModal({ onClose }) {
           <div className="header">
             <h2>Create group chat</h2>
             <span className="close-icon" onClick={onClose}>
-              <i className="fa-solid fa-xmark"></i>
+              <span className="close-icon" onClick={onClose}>
+                <FontAwesomeIcon icon={faXmark} />
+              </span>
             </span>
           </div>
 
