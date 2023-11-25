@@ -40,7 +40,7 @@ const server = app.listen(PORT, (error) => {
 const io = new Server(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "http://localhost:3000",
+    origin: process.env.CLIENT_SIDE_URI,
     methods: ["GET", "POST"],
     transports: ["websocket", "polling"],
     credentials: true,
