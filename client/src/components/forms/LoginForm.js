@@ -124,7 +124,7 @@ export default function LoginForm() {
       </div>
 
       <div className="text-right">
-        <Link to="/reset-password">Forgot Password?</Link>
+        <Link to="reset-password">Forgot Password?</Link>
       </div>
 
       <button

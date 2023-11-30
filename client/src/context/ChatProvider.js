@@ -13,6 +13,8 @@ const ChatProvider = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log("hi");
+    //set xem token con hieu luc khong
     const fetchUser = async () => {
       const data = await axios.get("user/authentication");
       if (data?.success) {
@@ -21,7 +23,6 @@ const ChatProvider = ({ children }) => {
       } else {
         localStorage.removeItem("token");
         localStorage.removeItem("userInfo");
-        navigate("/");
       }
     };
 
@@ -30,7 +31,7 @@ const ChatProvider = ({ children }) => {
     } else {
       navigate("/");
     }
-  }, [navigate]);
+  }, []);
 
   return (
     <ChatContext.Provider
