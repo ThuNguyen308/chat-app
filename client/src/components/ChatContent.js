@@ -31,7 +31,11 @@ export default function ChatContent({ messages }) {
               <div className="avatar-wrapper">
                 {!isUserMessage(user, m) &&
                 isSenderLastMessage(m, messages, index) ? (
-                  <img className="avatar" src={m.sender.pic} />
+                  <img
+                    className="avatar"
+                    src={m.sender.pic}
+                    alt={m.sender.name}
+                  />
                 ) : null}
               </div>
               <p className="message">{m.content}</p>

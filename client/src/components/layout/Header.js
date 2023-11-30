@@ -8,6 +8,8 @@ import {
   faMagnifyingGlass,
   faBell,
   faChevronDown,
+  faUser,
+  faRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { ChatState } from "../../context/ChatProvider";
@@ -21,6 +23,7 @@ export default function Header() {
     ChatState();
   const [isOpenSearchDrawer, setIsOpenSearchDrawer] = useState(false);
   const [isOpenUserModal, setIsOpenUserModal] = useState(false);
+
   useEffect(() => {
     let dropDownBtns = document.querySelectorAll(".dropdown-btn");
     let dropDownMenus = document.querySelectorAll(".dropdown-menu");
@@ -121,10 +124,12 @@ export default function Header() {
                 onClick={() => setIsOpenUserModal(true)}
               >
                 Your Info
+                <FontAwesomeIcon icon={faUser} />
               </li>
               <hr />
               <li className="dropdown-item" onClick={handleLogout}>
                 Log out
+                <FontAwesomeIcon icon={faRightFromBracket} />
               </li>
             </ul>
           </div>

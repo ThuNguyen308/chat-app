@@ -1,0 +1,61 @@
+@use '../abstracts/' as *;
+
+h1, h2, h3, h4, h5, h6 {
+    color: ss-var($colors, "neutral", "black");
+}
+
+h1 {
+    font-size: 3.2rem;
+}
+
+h2 {
+    font-size: 2.4rem;
+}
+
+h3 {
+    font-weight: ss-var($font-weight, "semibold");;
+    font-size: 1.872rem;
+}
+
+h4 {
+    font-size: 1.6rem;
+}
+
+h5 {
+    font-size: 1.328rem;
+}
+
+h6 {
+    font-size: 1.072rem;
+}
+
+/**
+ * Utilities
+ */
+.text-centre,
+// British or US English spellings..
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+* {
+    color: ss-var($colors, "neutral", "gray");
+}
+
+a {
+    font-size: 1.4rem;
+    font-weight: ss-var($font-weight, "medium");
+    color: ss-var($colors, "primary", "purple");
+}
+
+input {
+    color: ss-var($colors, "neutral", "darkgray");
+}

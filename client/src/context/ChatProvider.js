@@ -15,7 +15,7 @@ const ChatProvider = ({ children }) => {
   useEffect(() => {
     const fetchUser = async () => {
       const data = await axios.get("user/authentication");
-      if (data.success) {
+      if (data?.success) {
         setUser(JSON.parse(localStorage.getItem("userInfo")));
         navigate("/chats");
       } else {
@@ -30,7 +30,7 @@ const ChatProvider = ({ children }) => {
     } else {
       navigate("/");
     }
-  }, []);
+  }, [navigate]);
 
   return (
     <ChatContext.Provider

@@ -1,5 +1,7 @@
+//used to store all variables in project
+
 @use "functions" as *;
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@200;300;400;500;600;700&display=swap');
 // ======================== //
 // Prefixes for class names //
 // ======================== //
@@ -15,7 +17,7 @@ $input-height: 3.8rem;
 // ========= //
 // Font name //
 // ========= //
-$font-name: "Roboto";
+$font-name: "Raleway";
 $font-serif: "sans-serif";
 // ============ //
 // Font weights //
@@ -31,6 +33,10 @@ $font-weight: (
     "extrabold": 800,
     "blackbold": 900,
 );
+// ========= //
+// Border color //
+// ========= //
+$boder-color: #e6ebf5;
 // ====== //
 // Colors //
 // ====== //
@@ -38,8 +44,8 @@ $colors: (
     // Main colors
     primary:
         (
-            "green": #008f70,
-            "blue": #3182ce,
+            "purple": #7269ef,
+            "light-purple": #e2e4f9
         ),
     // Secondary colors
     secondary:
@@ -57,9 +63,9 @@ $colors: (
     // Grayscale/Basic colors
     neutral:
         (
-            "black": #000000,
-            "darkgray": #343434,
-            "gray": #837f7f,
+            "black": #343A40,
+            "darkgray": #495057,
+            "gray": #7A7F9A,
             "lightgray": #e9e9e9,
             "white": #ffffff,
         )
@@ -87,3 +93,5 @@ $breakpoints: (
     "1920": 1920px,
     "2560": 2560px,
 );
+
+//

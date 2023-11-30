@@ -186,6 +186,8 @@
     position: relative;
 
     &-menu {
+        min-width: 120px;
+        padding: 4px 0;
         position: absolute;
         right: 0;
         top: calc(100% + 5px);
@@ -207,13 +209,16 @@
     }
 
     &-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         white-space: nowrap;
         padding: 4px 8px;
         cursor: pointer;
     }
 
     &-item:hover {
-        background-color: ss-var($colors, "secondary", "lightergreen");
+        background-color: ss-var($colors, "primary", "light-purple");
     }
 
     hr {
@@ -280,6 +285,10 @@
                 display: flex;
                 gap: 10px;
                 align-items: center;
+                
+                input {
+                    background-color: red
+                }
             }
         }
 
@@ -349,7 +358,6 @@
             width: calc(100% - 45px);
             
             h3 {
-                font-weight: 500;
                 margin-bottom: 4px;
             }
             

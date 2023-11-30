@@ -54,6 +54,12 @@ export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
   useEffect(() => {
     if (socket) {
       socket.on("message recieved", (newMessageRecieved) => {
+        //   console.log("newMessageRecieved.chat._id", newMessageRecieved.chat._id);
+        //   console.log(
+        //     "selectedChatCompareRef.current?._id",
+        //     selectedChatCompareRef.current?._id
+        //   );
+        //   console.log("selectedChat._id", selectedChat?._id);
         //if current chat !== chat of message recieved
         if (
           selectedChatCompareRef.current?._id !== newMessageRecieved.chat._id
@@ -99,19 +105,19 @@ export default function ChatBox({ fetchChatsAgain, setFetchChatsAgain }) {
     selectedChatCompareRef.current = selectedChat;
 
     if (socket) {
-      console.log(
-        "chat change",
-        selectedChatCompareRef.current?._id,
-        selectedChat?._id
-      );
+      // console.log(
+      //   "chat change",
+      //   selectedChatCompareRef.current?._id,
+      //   selectedChat?._id
+      // );
       socket.on("typing", (room) => {
-        console.log(
-          "compare",
-          room,
-          selectedChatCompareRef.current?._id,
-          selectedChat._id,
-          room === selectedChat?._id
-        );
+        // console.log(
+        //   "compare",
+        //   room,
+        //   selectedChatCompareRef.current?._id,
+        //   selectedChat._id,
+        //   room === selectedChat?._id
+        // );
         if (room === selectedChatCompareRef.current?._id) {
           setTyping(true);
           scrollToBottom();

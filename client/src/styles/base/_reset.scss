@@ -1,12 +1,14 @@
+//used to reset or normalize default styles provided by browsers.
+
 // Abstracts
 @use '../abstracts/' as *;
 
 /* ====== */
 /* Resets */
 /* ====== */
-
 html {
     box-sizing: border-box;
+    line-height: 1.6;
     
     /* To make rem units easier to work with (1rem = 10px) */
     font-size: 62.5%;
@@ -63,8 +65,8 @@ ol {
 
 body {
     min-height: 100vh;
-    // text-rendering: optimizeSpeed;
-    // line-height: 1.5;
+    text-rendering: optimizeSpeed;
+    background-color: ss-var($colors, "primary", "light-purple");;
 }
 
 img,

@@ -76,6 +76,7 @@ export default function RegisterForm({ toLogin }) {
   };
 
   const postImage = async (pic) => {
+    console.log(pic.type);
     if (pic === undefined) {
       toast.error("Please select an Image.");
       return;
@@ -101,6 +102,7 @@ export default function RegisterForm({ toLogin }) {
           }
         );
         const res = await response.json();
+        console.log(res);
         setFields({ ...fields, pic: res.url });
       } catch (error) {
         console.log(error);
@@ -217,7 +219,12 @@ export default function RegisterForm({ toLogin }) {
 
       <div className="form-group">
         <label htmlFor="image">Avatar</label>
-        <input type="file" accept="image/*" id="image" onChange={handleInput} />
+        <input
+          type="file"
+          accept="image/*"
+          id="image"
+          onChange={(e) => postImage(e.target.files[0])}
+        />
       </div>
 
       <button

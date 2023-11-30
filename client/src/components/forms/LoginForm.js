@@ -123,14 +123,10 @@ export default function LoginForm() {
         <span className="error-message">{errors.password}</span>
       </div>
 
-      <div>
-        <Link
-          style={{ fontSize: "1.4rem", float: "right", fontStyle: "italic" }}
-          to="/reset-password"
-        >
-          Forgot Password
-        </Link>
+      <div className="text-right">
+        <Link to="/reset-password">Forgot Password?</Link>
       </div>
+
       <button
         className="btn btn-primary"
         onClick={handleSubmit}
